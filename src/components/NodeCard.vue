@@ -476,9 +476,74 @@ function hasRegion(region: string | null | undefined): boolean {
           </div>
         </div>
 
-        <!-- 延迟 + 丢包：分任务显示 -->
-        <template v-if="taskPingDisplays.length > 0">
-          <div class="flex flex-col gap-2">
+        <!-- 延迟 + 丢包面板（始终渲染，无数据则灰色占位条） -->
+        <div class="flex flex-col gap-2">
+          <!-- 无任务时：占位面板 -->
+          <template v-if="taskPingDisplays.length === 0">
+            <div
+              class="group flex flex-col gap-[1px] rounded-lg bg-slate-500/5 p-2"
+              :class="[!props.node.online ? 'blur-xs opacity-50' : '']"
+            >
+              <div class="flex items-center justify-between text-[11px] leading-none mb-0.5">
+                <span class="font-medium truncate min-w-0 mr-2">{{ props.node.name }}</span>
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="text-muted-foreground tabular-nums">{{ combinedPingDisplay.latencyDisplay.value }}</span>
+                  <span class="text-muted-foreground/60">·</span>
+                  <span class="text-muted-foreground tabular-nums">{{ combinedPingDisplay.lossDisplay.value }}</span>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-1.5">
+                <div
+                  class="group/panel flex flex-col gap-0.5 rounded-lg bg-slate-500/5 p-1.5 cursor-pointer"
+                  :title="combinedPingDisplay.latencyPanelTooltip.value"
+                  @click.stop="emit('pingClick')"
+                >
+                  <div class="flex items-center justify-between text-[10px] leading-none">
+                    <span class="tabular-nums text-muted-foreground/70">{{ combinedPingDisplay.latencyDisplay.value }}</span>
+                  </div>
+                  <div
+                    class="grid h-1.5 items-end gap-[1px]"
+                    :style="{ gridTemplateColumns: `repeat(${combinedPingDisplay.latencyRenderBars.value.length}, minmax(0, 1fr))` }"
+                  >
+                    <DataTooltip
+                      v-for="bar in combinedPingDisplay.latencyRenderBars.value" :key="bar.key"
+                      placement="top" :content="bar.tooltip" class="h-full w-full"
+                    >
+                      <span
+                        class="block h-full w-full rounded-[1px] transition-transform duration-150"
+                        :class="bar.className"
+                      />
+                    </DataTooltip>
+                  </div>
+                </div>
+                <div
+                  class="group/panel flex flex-col gap-0.5 rounded-lg bg-slate-500/5 p-1.5 cursor-pointer"
+                  :title="combinedPingDisplay.lossPanelTooltip.value"
+                  @click.stop="emit('pingClick')"
+                >
+                  <div class="flex items-center justify-between text-[10px] leading-none">
+                    <span class="tabular-nums text-muted-foreground/70">{{ combinedPingDisplay.lossDisplay.value }}</span>
+                  </div>
+                  <div
+                    class="grid h-1.5 items-end gap-[1px]"
+                    :style="{ gridTemplateColumns: `repeat(${combinedPingDisplay.lossRenderBars.value.length}, minmax(0, 1fr))` }"
+                  >
+                    <DataTooltip
+                      v-for="bar in combinedPingDisplay.lossRenderBars.value" :key="bar.key"
+                      placement="top" :content="bar.tooltip" class="h-full w-full"
+                    >
+                      <span
+                        class="block h-full w-full rounded-[1px] transition-transform duration-150"
+                        :class="bar.className"
+                      />
+                    </DataTooltip>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+          <!-- 有任务时：分任务显示 -->
+          <template v-else>
             <div
               v-for="task in visiblePingDisplays"
               :key="task.taskId"
@@ -561,66 +626,7 @@ function hasRegion(region: string | null | undefined): boolean {
               <template v-if="expandedPingTasks">收起</template>
               <template v-else>还有 {{ collapsedCount }} 条延迟线路 · 展开</template>
             </button>
-          </div>
-        </template>
-
-        <!-- 无 ping 数据时：传统合并占位（或隐藏） -->
-        <div v-else class="grid grid-cols-2 gap-1.5">
-          <button
-            type="button"
-            class="group/panel relative flex flex-col rounded-lg bg-slate-500/5"
-            :class="[nodeCardPingPanelClass, nodeCardPanelClass, !props.node.online ? 'blur-xs opacity-50' : '']"
-            :title="combinedPingDisplay.latencyPanelTooltip.value"
-            :aria-label="`${props.node.name} 延迟监测`"
-            @click.stop="emit('pingClick')"
-          >
-            <div class="flex items-center justify-between text-[11px] leading-none">
-              <span class="text-muted-foreground">延迟</span>
-              <span class="font-medium">{{ combinedPingDisplay.latencyDisplay.value }}</span>
-            </div>
-            <div
-              class="grid h-full items-end gap-[1px] opacity-80 group-hover/panel:opacity-100"
-              :style="{ gridTemplateColumns: `repeat(${combinedPingDisplay.latencyRenderBars.value.length}, minmax(0, 1fr))` }"
-            >
-              <DataTooltip
-                v-for="bar in combinedPingDisplay.latencyRenderBars.value" :key="bar.key"
-                placement="top" :content="bar.tooltip" class="h-full w-full"
-              >
-                <span
-                  class="block h-full w-full rounded-[1px] transition-transform duration-150 group-hover/data-tooltip:scale-y-160 group-hover/panel:opacity-60 group-hover/data-tooltip:!opacity-100"
-                  :class="bar.className"
-                />
-              </DataTooltip>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            class="group/panel relative flex flex-col rounded-lg bg-slate-500/5"
-            :class="[nodeCardPingPanelClass, nodeCardPanelClass, !props.node.online ? 'blur-xs opacity-50' : '']"
-            :title="combinedPingDisplay.lossPanelTooltip.value"
-            :aria-label="`${props.node.name} 丢包监测`"
-            @click.stop="emit('pingClick')"
-          >
-            <div class="flex items-center justify-between text-[11px] leading-none">
-              <span class="text-muted-foreground">丢包</span>
-              <span class="font-medium">{{ combinedPingDisplay.lossDisplay.value }}</span>
-            </div>
-            <div
-              class="grid h-full items-end gap-[1px] opacity-80 group-hover/panel:opacity-100"
-              :style="{ gridTemplateColumns: `repeat(${combinedPingDisplay.lossRenderBars.value.length}, minmax(0, 1fr))` }"
-            >
-              <DataTooltip
-                v-for="bar in combinedPingDisplay.lossRenderBars.value" :key="bar.key"
-                placement="top" :content="bar.tooltip" class="h-full w-full"
-              >
-                <span
-                  class="block h-full w-full rounded-[1px] transition-transform duration-150 group-hover/data-tooltip:scale-y-160 group-hover/panel:opacity-60 group-hover/data-tooltip:!opacity-100"
-                  :class="bar.className"
-                />
-              </DataTooltip>
-            </div>
-          </button>
+          </template>
         </div>
 
         <!-- 自定义标签 -->
