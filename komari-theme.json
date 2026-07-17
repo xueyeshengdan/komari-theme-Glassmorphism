@@ -1,79 +1,403 @@
 {
   "name": "Komari Glassmorphism Lobster Edition",
   "short": "lobster-edition",
-  "description": "Komari Glassmorphism 主题 fork，首页卡片按 Ping 任务分开显示延迟",
-  "version": "3.2.0",
+  "description": "Komari Glassmorphism \u4e3b\u9898 fork\uff0c\u9996\u9875\u5361\u7247\u6309 Ping \u4efb\u52a1\u5206\u5f00\u663e\u793a\u5ef6\u8fdf",
+  "version": "3.2.1",
   "author": "xueyeshengdan",
   "url": "https://github.com/xueyeshengdan/komari-theme-Glassmorphism",
   "preview": "preview.png",
   "configuration": {
     "type": "managed",
-    "name": "主题设置",
+    "name": "\u4e3b\u9898\u8bbe\u7f6e",
     "data": [
-      { "name": "01 · 基础与外观", "type": "title" },
-      { "key": "themeMode", "name": "默认主题模式", "type": "select", "default": "beijing", "options": "beijing,light,dark", "help": "beijing=北京时间自动； light=亮色； dark=暗色。" },
-      { "key": "dataUpdateInterval", "name": "数据更新间隔", "type": "number", "default": 3, "help": "实时数据刷新间隔，单位：秒（建议 1-10 秒）" },
-      { "key": "rpcTransportMode", "name": "RPC 连接模式", "type": "select", "default": "http", "options": "http,websocket", "help": "HTTP 兼容性更好；反代支持时可改 websocket。" },
-      { "key": "defaultViewMode", "name": "默认视图模式", "type": "select", "default": "card", "options": "card,list", "help": "节点列表的默认显示模式" },
-      { "key": "nodeCardSize", "name": "节点卡片尺寸", "type": "select", "default": "compact", "options": "mini,compact,comfortable,large", "help": "从高密度 mini 到宽松 large；默认 compact。" },
-
-      { "name": "02 · 首页布局", "type": "title" },
-      { "key": "alertEnabled", "name": "启用公告", "type": "switch", "default": false, "help": "在首页显示自定义公告" },
-      { "key": "alertTitle", "name": "公告标题", "type": "string", "default": "", "help": "公告的标题内容" },
-      { "key": "alertContent", "name": "公告内容", "type": "richtext", "default": "", "help": "公告的详细内容（支持简单 Markdown 格式）" },
-      { "key": "stopEarth", "name": "停止地球旋转", "type": "switch", "default": false, "help": "开启后地球默认不自动旋转，用户仍可手动拖拽查看" },
-      { "key": "earthRenderer", "name": "地球样式", "type": "select", "default": "realistic", "options": "realistic,cobe,tiled", "help": "realistic=贴图，cobe=点阵，tiled=平铺地图。" },
-      { "key": "hideEarth", "name": "隐藏地球", "type": "switch", "default": false, "help": "隐藏地球后仅显示总览卡片" },
-      { "key": "hideGeneralCard", "name": "隐藏头部", "type": "switch", "default": false, "help": "隐藏地球和总览卡片" },
-      { "key": "visitorInfoEnabled", "name": "显示访客信息", "type": "switch", "default": true, "help": "显示底部访客 IP 条和左下角访客详情卡片" },
-      { "key": "glassColorPreset", "name": "毛玻璃配色方案", "type": "select", "default": "翡翠", "options": "翡翠,柔和,高对比,午夜,自定义", "help": "选择“自定义”后读取下方 JSON。" },
-      { "key": "colorVisionMode", "name": "色觉辅助配色", "type": "select", "default": "标准", "options": "标准,色觉友好", "help": "色觉友好使用蓝、蓝绿、橙、朱红、紫红，并为图表和状态增加线型、纹理、文字或图标区分。" },
-      { "key": "glassCustomColors", "name": "自定义毛玻璃颜色 JSON", "type": "richtext", "default": "{\"lightCard\":\"#f1f5f9bd\",\"lightControl\":\"#e2e8f0c2\",\"lightText\":\"#14151a\",\"lightMutedText\":\"#3f4552\",\"lightBorder\":\"#cbd5e199\",\"darkCard\":\"#0d111ad9\",\"darkControl\":\"#101624cc\",\"darkText\":\"#f7f8fb\",\"darkMutedText\":\"#d6dae4\",\"darkBorder\":\"#ffffff2e\"}", "help": "lightCard/darkCard=卡片； lightControl/darkControl=控制条； lightText/darkText=主文字； lightMutedText/darkMutedText=次文字； lightBorder/darkBorder=边框。支持 #RRGGBB 和 #RRGGBBAA。" },
-
-      { "name": "03 · 首页总览卡片", "type": "title" },
-      { "key": "generalCardPreset", "name": "头部卡片方案", "type": "select", "default": "基础", "options": "官方,基础,运维,资源,财务,流量,GPU,资产,完整,自定义", "help": "完整=展示全部可用卡片；自定义时读取下方 keys，顺序就是显示顺序。" },
-      { "key": "generalCardKeys", "name": "自定义头部卡片 keys", "type": "richtext", "default": "memory\ndisk\nremainingValue\ntotalTraffic\nuploadSpeed\ndownloadSpeed", "help": "逗号、空格或换行分隔。 currentTime=当前时间； memory=内存； disk=硬盘； remainingValue=剩余价值； totalTraffic=累计流量； uploadSpeed=实时上行； downloadSpeed=实时下行； onlineNodes=在线节点； offlineNodes=离线节点； avgCpu=平均CPU； avgGpu=平均GPU； avgLoad=平均负载； swap=交换内存； processes=进程总数； connections=连接总数； cpuCores=CPU核心； gpuNodes=GPU节点； gpuPeakNode=GPU峰值节点； trafficQuota=流量配额； trafficPeak=实时峰值； uploadPeakNode=上行最高节点； downloadPeakNode=下行最高节点； highLoadNodes=高负载节点； expiringNodes=即将到期； trafficWarnings=流量预警； connectionPeakNode=连接峰值节点； regionDistribution=地区分布； systemDistribution=系统分布； virtualizationDistribution=虚拟化分布； monthlyCost=月费用； yearlyCost=年费用。" },
-
-      { "name": "04 · 高级工具与隐私", "type": "title" },
-      { "key": "homeToolsEnabled", "name": "登录后显示高级工具", "type": "switch", "default": true, "help": "显示拓扑、性价比、健康、导出和审计工具。" },
-      { "key": "hideAdminEntryWhenLoggedOut", "name": "隐藏后台入口", "type": "switch", "default": false, "help": "未登录时隐藏顶部后台管理入口" },
-      { "key": "hidePriceWhenLoggedOut", "name": "未登录隐藏价格", "type": "switch", "default": false, "help": "未登录时隐藏节点卡片/列表中的价格、剩余价值和费用类卡片；在线天数仍会显示" },
-      { "key": "providerAliases", "name": "厂商自定义别名", "type": "string", "default": "", "help": "格式：Provider:alias1,alias2;Provider2:alias。" },
-      { "key": "exportSecondaryPassword", "name": "导出二级密码", "type": "string", "default": "", "help": "可选。设置后，快照导出在已登录基础上还需要输入该二级密码；留空则只校验登录。" },
-      { "key": "disablePageAnimation", "name": "减弱过渡动画", "type": "switch", "default": false, "help": "减少页面过渡动画效果，提升访问速度和响应性" },
-
-      { "name": "05 · 节点卡片、列表与快捷控制", "type": "title" },
-      { "key": "homeQuickControlsEnabled", "name": "显示主页快捷控制", "type": "switch", "default": true, "help": "在节点分组旁显示默认、总流量、峰值、离线、高负载、即将到期等快捷按钮" },
-      { "key": "homeQuickControlPreset", "name": "快捷控制方案", "type": "select", "default": "完整", "options": "基础,流量,运维,完整,自定义", "help": "自定义时读取下方 keys。" },
-      { "key": "homeQuickControlKeys", "name": "自定义快捷按钮 keys", "type": "richtext", "default": "default\ntotalTraffic\npeak\noffline", "help": "逗号、空格或换行分隔。 default=默认； totalTraffic=总流量； upload=上行； download=下行； peak=实时峰值； offline=离线； highLoad=高负载； expiring=即将到期。" },
-      { "key": "nodeListMetadataEnabled", "name": "列表信息栏", "type": "switch", "default": true, "help": "在列表视图显示节点信息栏；关闭后隐藏厂商、地区、ASN 和标签信息列。" },
-      { "key": "nodeListMetadataFields", "name": "列表信息字段 keys", "type": "richtext", "default": "provider\nregion\nasn", "help": "逗号、空格或换行分隔。 provider=厂商； region=地区； city=城市； asn=ASN； tags=自定义标签； group=分组。" },
-      { "key": "nodeListCustomTagsVisible", "name": "列表显示自定义标签", "type": "switch", "default": true, "help": "列表信息字段包含 tags 时，是否显示节点自定义标签；无标签节点不会显示空标签。" },
-      { "key": "offlineNodesLast", "name": "离线节点置底", "type": "switch", "default": false, "help": "筛选或排序时优先显示在线节点。" },
-      { "key": "homeQuickDefaultControl", "name": "默认快捷模式", "type": "select", "default": "default", "options": "default,totalTraffic,upload,download,peak,offline,highLoad,expiring", "help": "default=默认； totalTraffic=总流量； upload/download=上下行； peak=峰值； offline=离线； highLoad=高负载； expiring=即将到期。" },
-      { "key": "homeHighLoadThreshold", "name": "高负载阈值", "type": "number", "default": 80, "help": "CPU、内存或硬盘占用达到该百分比时归为高负载节点（1-100）" },
-      { "key": "homeTrafficWarningThreshold", "name": "流量预警阈值", "type": "number", "default": 80, "help": "节点流量配额使用率达到该百分比时归为流量预警（1-100）" },
-      { "key": "homeExpiringDays", "name": "即将到期天数", "type": "number", "default": 30, "help": "节点剩余天数小于等于该值时归为即将到期（1-3650）" },
-      { "key": "diskPredictionEnabled", "name": "启用磁盘耗尽预测", "type": "switch", "default": false, "help": "基于负载历史里的磁盘用量趋势预测耗尽时间；样本少于 2 天或未增长时不显示" },
-      { "key": "diskPredictionThresholdDays", "name": "磁盘预测预警天数", "type": "number", "default": 30, "help": "预计剩余天数小于等于该值时在节点卡片和详情负载图中显示提示（1-3650）" },
-
-      { "name": "06 · 节点详情概览卡片", "type": "title" },
-      { "key": "nodeDetailSectionTabsEnabled", "name": "详情页分区标签页", "type": "switch", "default": false, "help": "默认关闭，保持节点详情页纵向连续展示；开启后按概览、负载、延迟分区显示。" },
-      { "key": "detailMetricCardPreset", "name": "详情概览卡片方案", "type": "select", "default": "财务", "options": "财务,状态,资源,网络,GPU,综合,自定义", "help": "宽屏每行 4 张，中屏 3 张，移动端 2 张。财务/状态/网络/GPU=8 张；资源=12 张；综合=16 张；自定义读取下方 keys。" },
-      { "key": "detailMetricCardKeys", "name": "自定义详情卡片 keys", "type": "richtext", "default": "nodePrice\nmonthlyCost\nremainingTime\nremainingValue\ntotalTraffic\ntrafficQuota\nuptime\nconnections", "help": "逗号、空格或换行分隔。 nodePrice=节点价格； monthlyCost=月均支出； remainingTime=剩余时间； remainingValue=剩余价值； cpuUsage=CPU使用率； gpuUsage=GPU使用率； memoryUsage=内存使用率； swapUsage=交换内存使用率； diskUsage=硬盘使用率； load=系统负载； temperature=系统温度； processes=进程数； connections=连接数； uptime=运行时间； uploadSpeed=实时上行； downloadSpeed=实时下行； totalTraffic=累计流量； trafficQuota=流量配额。" },
-
-      { "name": "07 · 节点详情图表", "type": "title" },
-      { "key": "gpuChartEnabled", "name": "显示 GPU 指标图", "type": "switch", "default": false, "help": "控制 GPU 利用率、设备、显存和 GPU 温度序列；无 GPU 数据时自动隐藏。" },
-      { "key": "chartDashboardPreset", "name": "详情负载图方案", "type": "select", "default": "默认", "options": "默认,精简,资源,网络,GPU,延迟,运维,完整,自定义", "help": "资源、网络、GPU、延迟和运维按指标族组合；完整覆盖官方 25 个指标。自定义读取下方 keys。" },
-      { "key": "chartDashboardTemplate", "name": "自定义详情图表 keys", "type": "richtext", "default": "cpu\nmemory\ndisk\nnetwork\ngpu\nconnections\nprocess", "help": "逗号、空格或换行分隔。 cpu=CPU/负载； memory=RAM/Swap及总量； disk=磁盘/总量； network=实时上下行； traffic=累计与周期流量； gpu=GPU/设备利用率； gpuMemory=GPU显存/总量； temperature=系统/GPU温度； connections=TCP/UDP； process=进程； ping=Ping延迟； pingLoss=Ping丢包。旧 JSON 仍兼容。" },
-
-      { "name": "08 · 自定义背景", "type": "title" },
-      { "key": "backgroundEnabled", "name": "启用自定义背景", "type": "switch", "default": false, "help": "启用后可设置自定义图片或视频作为页面背景" },
-      { "key": "backgroundType", "name": "背景类型", "type": "select", "default": "image", "options": "image,video", "help": "image=图片； video=视频。" },
-      { "key": "lightBackgroundUrl", "name": "亮色模式背景地址", "type": "string", "default": "", "help": "支持 http(s) URL、站内 / 路径；持久本地文件放在 data/theme/user-assets/ 后填写 local:文件名。" },
-      { "key": "darkBackgroundUrl", "name": "暗色模式背景地址", "type": "string", "default": "", "help": "支持 http(s) URL、站内 / 路径；持久本地文件放在 data/theme/user-assets/ 后填写 local:文件名。" },
-      { "key": "backgroundBlur", "name": "背景模糊半径", "type": "number", "default": 0, "help": "背景的高斯模糊半径（单位：px），0 表示不模糊" },
-      { "key": "backgroundOverlay", "name": "背景遮罩强度", "type": "number", "default": 0, "help": "范围 -100 到 100；0 关闭，正数加深，负数降低透明度。" }
+      {
+        "name": "01 \u00b7 \u57fa\u7840\u4e0e\u5916\u89c2",
+        "type": "title"
+      },
+      {
+        "key": "themeMode",
+        "name": "\u9ed8\u8ba4\u4e3b\u9898\u6a21\u5f0f",
+        "type": "select",
+        "default": "beijing",
+        "options": "beijing,light,dark",
+        "help": "beijing=\u5317\u4eac\u65f6\u95f4\u81ea\u52a8\uff1b light=\u4eae\u8272\uff1b dark=\u6697\u8272\u3002"
+      },
+      {
+        "key": "dataUpdateInterval",
+        "name": "\u6570\u636e\u66f4\u65b0\u95f4\u9694",
+        "type": "number",
+        "default": 3,
+        "help": "\u5b9e\u65f6\u6570\u636e\u5237\u65b0\u95f4\u9694\uff0c\u5355\u4f4d\uff1a\u79d2\uff08\u5efa\u8bae 1-10 \u79d2\uff09"
+      },
+      {
+        "key": "rpcTransportMode",
+        "name": "RPC \u8fde\u63a5\u6a21\u5f0f",
+        "type": "select",
+        "default": "http",
+        "options": "http,websocket",
+        "help": "HTTP \u517c\u5bb9\u6027\u66f4\u597d\uff1b\u53cd\u4ee3\u652f\u6301\u65f6\u53ef\u6539 websocket\u3002"
+      },
+      {
+        "key": "defaultViewMode",
+        "name": "\u9ed8\u8ba4\u89c6\u56fe\u6a21\u5f0f",
+        "type": "select",
+        "default": "card",
+        "options": "card,list",
+        "help": "\u8282\u70b9\u5217\u8868\u7684\u9ed8\u8ba4\u663e\u793a\u6a21\u5f0f"
+      },
+      {
+        "key": "nodeCardSize",
+        "name": "\u8282\u70b9\u5361\u7247\u5c3a\u5bf8",
+        "type": "select",
+        "default": "compact",
+        "options": "mini,compact,comfortable,large",
+        "help": "\u4ece\u9ad8\u5bc6\u5ea6 mini \u5230\u5bbd\u677e large\uff1b\u9ed8\u8ba4 compact\u3002"
+      },
+      {
+        "name": "02 \u00b7 \u9996\u9875\u5e03\u5c40",
+        "type": "title"
+      },
+      {
+        "key": "alertEnabled",
+        "name": "\u542f\u7528\u516c\u544a",
+        "type": "switch",
+        "default": false,
+        "help": "\u5728\u9996\u9875\u663e\u793a\u81ea\u5b9a\u4e49\u516c\u544a"
+      },
+      {
+        "key": "alertTitle",
+        "name": "\u516c\u544a\u6807\u9898",
+        "type": "string",
+        "default": "",
+        "help": "\u516c\u544a\u7684\u6807\u9898\u5185\u5bb9"
+      },
+      {
+        "key": "alertContent",
+        "name": "\u516c\u544a\u5185\u5bb9",
+        "type": "richtext",
+        "default": "",
+        "help": "\u516c\u544a\u7684\u8be6\u7ec6\u5185\u5bb9\uff08\u652f\u6301\u7b80\u5355 Markdown \u683c\u5f0f\uff09"
+      },
+      {
+        "key": "stopEarth",
+        "name": "\u505c\u6b62\u5730\u7403\u65cb\u8f6c",
+        "type": "switch",
+        "default": false,
+        "help": "\u5f00\u542f\u540e\u5730\u7403\u9ed8\u8ba4\u4e0d\u81ea\u52a8\u65cb\u8f6c\uff0c\u7528\u6237\u4ecd\u53ef\u624b\u52a8\u62d6\u62fd\u67e5\u770b"
+      },
+      {
+        "key": "earthRenderer",
+        "name": "\u5730\u7403\u6837\u5f0f",
+        "type": "select",
+        "default": "realistic",
+        "options": "realistic,cobe,tiled",
+        "help": "realistic=\u8d34\u56fe\uff0ccobe=\u70b9\u9635\uff0ctiled=\u5e73\u94fa\u5730\u56fe\u3002"
+      },
+      {
+        "key": "hideEarth",
+        "name": "\u9690\u85cf\u5730\u7403",
+        "type": "switch",
+        "default": false,
+        "help": "\u9690\u85cf\u5730\u7403\u540e\u4ec5\u663e\u793a\u603b\u89c8\u5361\u7247"
+      },
+      {
+        "key": "hideGeneralCard",
+        "name": "\u9690\u85cf\u5934\u90e8",
+        "type": "switch",
+        "default": false,
+        "help": "\u9690\u85cf\u5730\u7403\u548c\u603b\u89c8\u5361\u7247"
+      },
+      {
+        "key": "visitorInfoEnabled",
+        "name": "\u663e\u793a\u8bbf\u5ba2\u4fe1\u606f",
+        "type": "switch",
+        "default": true,
+        "help": "\u663e\u793a\u5e95\u90e8\u8bbf\u5ba2 IP \u6761\u548c\u5de6\u4e0b\u89d2\u8bbf\u5ba2\u8be6\u60c5\u5361\u7247"
+      },
+      {
+        "key": "glassColorPreset",
+        "name": "\u6bdb\u73bb\u7483\u914d\u8272\u65b9\u6848",
+        "type": "select",
+        "default": "\u7fe1\u7fe0",
+        "options": "\u7fe1\u7fe0,\u67d4\u548c,\u9ad8\u5bf9\u6bd4,\u5348\u591c,\u81ea\u5b9a\u4e49",
+        "help": "\u9009\u62e9\u201c\u81ea\u5b9a\u4e49\u201d\u540e\u8bfb\u53d6\u4e0b\u65b9 JSON\u3002"
+      },
+      {
+        "key": "colorVisionMode",
+        "name": "\u8272\u89c9\u8f85\u52a9\u914d\u8272",
+        "type": "select",
+        "default": "\u6807\u51c6",
+        "options": "\u6807\u51c6,\u8272\u89c9\u53cb\u597d",
+        "help": "\u8272\u89c9\u53cb\u597d\u4f7f\u7528\u84dd\u3001\u84dd\u7eff\u3001\u6a59\u3001\u6731\u7ea2\u3001\u7d2b\u7ea2\uff0c\u5e76\u4e3a\u56fe\u8868\u548c\u72b6\u6001\u589e\u52a0\u7ebf\u578b\u3001\u7eb9\u7406\u3001\u6587\u5b57\u6216\u56fe\u6807\u533a\u5206\u3002"
+      },
+      {
+        "key": "glassCustomColors",
+        "name": "\u81ea\u5b9a\u4e49\u6bdb\u73bb\u7483\u989c\u8272 JSON",
+        "type": "richtext",
+        "default": "{\"lightCard\":\"#f1f5f9bd\",\"lightControl\":\"#e2e8f0c2\",\"lightText\":\"#14151a\",\"lightMutedText\":\"#3f4552\",\"lightBorder\":\"#cbd5e199\",\"darkCard\":\"#0d111ad9\",\"darkControl\":\"#101624cc\",\"darkText\":\"#f7f8fb\",\"darkMutedText\":\"#d6dae4\",\"darkBorder\":\"#ffffff2e\"}",
+        "help": "lightCard/darkCard=\u5361\u7247\uff1b lightControl/darkControl=\u63a7\u5236\u6761\uff1b lightText/darkText=\u4e3b\u6587\u5b57\uff1b lightMutedText/darkMutedText=\u6b21\u6587\u5b57\uff1b lightBorder/darkBorder=\u8fb9\u6846\u3002\u652f\u6301 #RRGGBB \u548c #RRGGBBAA\u3002"
+      },
+      {
+        "name": "03 \u00b7 \u9996\u9875\u603b\u89c8\u5361\u7247",
+        "type": "title"
+      },
+      {
+        "key": "generalCardPreset",
+        "name": "\u5934\u90e8\u5361\u7247\u65b9\u6848",
+        "type": "select",
+        "default": "\u57fa\u7840",
+        "options": "\u5b98\u65b9,\u57fa\u7840,\u8fd0\u7ef4,\u8d44\u6e90,\u8d22\u52a1,\u6d41\u91cf,GPU,\u8d44\u4ea7,\u5b8c\u6574,\u81ea\u5b9a\u4e49",
+        "help": "\u5b8c\u6574=\u5c55\u793a\u5168\u90e8\u53ef\u7528\u5361\u7247\uff1b\u81ea\u5b9a\u4e49\u65f6\u8bfb\u53d6\u4e0b\u65b9 keys\uff0c\u987a\u5e8f\u5c31\u662f\u663e\u793a\u987a\u5e8f\u3002"
+      },
+      {
+        "key": "generalCardKeys",
+        "name": "\u81ea\u5b9a\u4e49\u5934\u90e8\u5361\u7247 keys",
+        "type": "richtext",
+        "default": "memory\ndisk\nremainingValue\ntotalTraffic\nuploadSpeed\ndownloadSpeed",
+        "help": "\u9017\u53f7\u3001\u7a7a\u683c\u6216\u6362\u884c\u5206\u9694\u3002 currentTime=\u5f53\u524d\u65f6\u95f4\uff1b memory=\u5185\u5b58\uff1b disk=\u786c\u76d8\uff1b remainingValue=\u5269\u4f59\u4ef7\u503c\uff1b totalTraffic=\u7d2f\u8ba1\u6d41\u91cf\uff1b uploadSpeed=\u5b9e\u65f6\u4e0a\u884c\uff1b downloadSpeed=\u5b9e\u65f6\u4e0b\u884c\uff1b onlineNodes=\u5728\u7ebf\u8282\u70b9\uff1b offlineNodes=\u79bb\u7ebf\u8282\u70b9\uff1b avgCpu=\u5e73\u5747CPU\uff1b avgGpu=\u5e73\u5747GPU\uff1b avgLoad=\u5e73\u5747\u8d1f\u8f7d\uff1b swap=\u4ea4\u6362\u5185\u5b58\uff1b processes=\u8fdb\u7a0b\u603b\u6570\uff1b connections=\u8fde\u63a5\u603b\u6570\uff1b cpuCores=CPU\u6838\u5fc3\uff1b gpuNodes=GPU\u8282\u70b9\uff1b gpuPeakNode=GPU\u5cf0\u503c\u8282\u70b9\uff1b trafficQuota=\u6d41\u91cf\u914d\u989d\uff1b trafficPeak=\u5b9e\u65f6\u5cf0\u503c\uff1b uploadPeakNode=\u4e0a\u884c\u6700\u9ad8\u8282\u70b9\uff1b downloadPeakNode=\u4e0b\u884c\u6700\u9ad8\u8282\u70b9\uff1b highLoadNodes=\u9ad8\u8d1f\u8f7d\u8282\u70b9\uff1b expiringNodes=\u5373\u5c06\u5230\u671f\uff1b trafficWarnings=\u6d41\u91cf\u9884\u8b66\uff1b connectionPeakNode=\u8fde\u63a5\u5cf0\u503c\u8282\u70b9\uff1b regionDistribution=\u5730\u533a\u5206\u5e03\uff1b systemDistribution=\u7cfb\u7edf\u5206\u5e03\uff1b virtualizationDistribution=\u865a\u62df\u5316\u5206\u5e03\uff1b monthlyCost=\u6708\u8d39\u7528\uff1b yearlyCost=\u5e74\u8d39\u7528\u3002"
+      },
+      {
+        "name": "04 \u00b7 \u9ad8\u7ea7\u5de5\u5177\u4e0e\u9690\u79c1",
+        "type": "title"
+      },
+      {
+        "key": "homeToolsEnabled",
+        "name": "\u767b\u5f55\u540e\u663e\u793a\u9ad8\u7ea7\u5de5\u5177",
+        "type": "switch",
+        "default": true,
+        "help": "\u663e\u793a\u62d3\u6251\u3001\u6027\u4ef7\u6bd4\u3001\u5065\u5eb7\u3001\u5bfc\u51fa\u548c\u5ba1\u8ba1\u5de5\u5177\u3002"
+      },
+      {
+        "key": "hideAdminEntryWhenLoggedOut",
+        "name": "\u9690\u85cf\u540e\u53f0\u5165\u53e3",
+        "type": "switch",
+        "default": false,
+        "help": "\u672a\u767b\u5f55\u65f6\u9690\u85cf\u9876\u90e8\u540e\u53f0\u7ba1\u7406\u5165\u53e3"
+      },
+      {
+        "key": "hidePriceWhenLoggedOut",
+        "name": "\u672a\u767b\u5f55\u9690\u85cf\u4ef7\u683c",
+        "type": "switch",
+        "default": false,
+        "help": "\u672a\u767b\u5f55\u65f6\u9690\u85cf\u8282\u70b9\u5361\u7247/\u5217\u8868\u4e2d\u7684\u4ef7\u683c\u3001\u5269\u4f59\u4ef7\u503c\u548c\u8d39\u7528\u7c7b\u5361\u7247\uff1b\u5728\u7ebf\u5929\u6570\u4ecd\u4f1a\u663e\u793a"
+      },
+      {
+        "key": "providerAliases",
+        "name": "\u5382\u5546\u81ea\u5b9a\u4e49\u522b\u540d",
+        "type": "string",
+        "default": "",
+        "help": "\u683c\u5f0f\uff1aProvider:alias1,alias2;Provider2:alias\u3002"
+      },
+      {
+        "key": "exportSecondaryPassword",
+        "name": "\u5bfc\u51fa\u4e8c\u7ea7\u5bc6\u7801",
+        "type": "string",
+        "default": "",
+        "help": "\u53ef\u9009\u3002\u8bbe\u7f6e\u540e\uff0c\u5feb\u7167\u5bfc\u51fa\u5728\u5df2\u767b\u5f55\u57fa\u7840\u4e0a\u8fd8\u9700\u8981\u8f93\u5165\u8be5\u4e8c\u7ea7\u5bc6\u7801\uff1b\u7559\u7a7a\u5219\u53ea\u6821\u9a8c\u767b\u5f55\u3002"
+      },
+      {
+        "key": "disablePageAnimation",
+        "name": "\u51cf\u5f31\u8fc7\u6e21\u52a8\u753b",
+        "type": "switch",
+        "default": false,
+        "help": "\u51cf\u5c11\u9875\u9762\u8fc7\u6e21\u52a8\u753b\u6548\u679c\uff0c\u63d0\u5347\u8bbf\u95ee\u901f\u5ea6\u548c\u54cd\u5e94\u6027"
+      },
+      {
+        "name": "05 \u00b7 \u8282\u70b9\u5361\u7247\u3001\u5217\u8868\u4e0e\u5feb\u6377\u63a7\u5236",
+        "type": "title"
+      },
+      {
+        "key": "homeQuickControlsEnabled",
+        "name": "\u663e\u793a\u4e3b\u9875\u5feb\u6377\u63a7\u5236",
+        "type": "switch",
+        "default": true,
+        "help": "\u5728\u8282\u70b9\u5206\u7ec4\u65c1\u663e\u793a\u9ed8\u8ba4\u3001\u603b\u6d41\u91cf\u3001\u5cf0\u503c\u3001\u79bb\u7ebf\u3001\u9ad8\u8d1f\u8f7d\u3001\u5373\u5c06\u5230\u671f\u7b49\u5feb\u6377\u6309\u94ae"
+      },
+      {
+        "key": "homeQuickControlPreset",
+        "name": "\u5feb\u6377\u63a7\u5236\u65b9\u6848",
+        "type": "select",
+        "default": "\u5b8c\u6574",
+        "options": "\u57fa\u7840,\u6d41\u91cf,\u8fd0\u7ef4,\u5b8c\u6574,\u81ea\u5b9a\u4e49",
+        "help": "\u81ea\u5b9a\u4e49\u65f6\u8bfb\u53d6\u4e0b\u65b9 keys\u3002"
+      },
+      {
+        "key": "homeQuickControlKeys",
+        "name": "\u81ea\u5b9a\u4e49\u5feb\u6377\u6309\u94ae keys",
+        "type": "richtext",
+        "default": "default\ntotalTraffic\npeak\noffline",
+        "help": "\u9017\u53f7\u3001\u7a7a\u683c\u6216\u6362\u884c\u5206\u9694\u3002 default=\u9ed8\u8ba4\uff1b totalTraffic=\u603b\u6d41\u91cf\uff1b upload=\u4e0a\u884c\uff1b download=\u4e0b\u884c\uff1b peak=\u5b9e\u65f6\u5cf0\u503c\uff1b offline=\u79bb\u7ebf\uff1b highLoad=\u9ad8\u8d1f\u8f7d\uff1b expiring=\u5373\u5c06\u5230\u671f\u3002"
+      },
+      {
+        "key": "nodeListMetadataEnabled",
+        "name": "\u5217\u8868\u4fe1\u606f\u680f",
+        "type": "switch",
+        "default": true,
+        "help": "\u5728\u5217\u8868\u89c6\u56fe\u663e\u793a\u8282\u70b9\u4fe1\u606f\u680f\uff1b\u5173\u95ed\u540e\u9690\u85cf\u5382\u5546\u3001\u5730\u533a\u3001ASN \u548c\u6807\u7b7e\u4fe1\u606f\u5217\u3002"
+      },
+      {
+        "key": "nodeListMetadataFields",
+        "name": "\u5217\u8868\u4fe1\u606f\u5b57\u6bb5 keys",
+        "type": "richtext",
+        "default": "provider\nregion\nasn",
+        "help": "\u9017\u53f7\u3001\u7a7a\u683c\u6216\u6362\u884c\u5206\u9694\u3002 provider=\u5382\u5546\uff1b region=\u5730\u533a\uff1b city=\u57ce\u5e02\uff1b asn=ASN\uff1b tags=\u81ea\u5b9a\u4e49\u6807\u7b7e\uff1b group=\u5206\u7ec4\u3002"
+      },
+      {
+        "key": "nodeListCustomTagsVisible",
+        "name": "\u5217\u8868\u663e\u793a\u81ea\u5b9a\u4e49\u6807\u7b7e",
+        "type": "switch",
+        "default": true,
+        "help": "\u5217\u8868\u4fe1\u606f\u5b57\u6bb5\u5305\u542b tags \u65f6\uff0c\u662f\u5426\u663e\u793a\u8282\u70b9\u81ea\u5b9a\u4e49\u6807\u7b7e\uff1b\u65e0\u6807\u7b7e\u8282\u70b9\u4e0d\u4f1a\u663e\u793a\u7a7a\u6807\u7b7e\u3002"
+      },
+      {
+        "key": "offlineNodesLast",
+        "name": "\u79bb\u7ebf\u8282\u70b9\u7f6e\u5e95",
+        "type": "switch",
+        "default": false,
+        "help": "\u7b5b\u9009\u6216\u6392\u5e8f\u65f6\u4f18\u5148\u663e\u793a\u5728\u7ebf\u8282\u70b9\u3002"
+      },
+      {
+        "key": "homeQuickDefaultControl",
+        "name": "\u9ed8\u8ba4\u5feb\u6377\u6a21\u5f0f",
+        "type": "select",
+        "default": "default",
+        "options": "default,totalTraffic,upload,download,peak,offline,highLoad,expiring",
+        "help": "default=\u9ed8\u8ba4\uff1b totalTraffic=\u603b\u6d41\u91cf\uff1b upload/download=\u4e0a\u4e0b\u884c\uff1b peak=\u5cf0\u503c\uff1b offline=\u79bb\u7ebf\uff1b highLoad=\u9ad8\u8d1f\u8f7d\uff1b expiring=\u5373\u5c06\u5230\u671f\u3002"
+      },
+      {
+        "key": "homeHighLoadThreshold",
+        "name": "\u9ad8\u8d1f\u8f7d\u9608\u503c",
+        "type": "number",
+        "default": 80,
+        "help": "CPU\u3001\u5185\u5b58\u6216\u786c\u76d8\u5360\u7528\u8fbe\u5230\u8be5\u767e\u5206\u6bd4\u65f6\u5f52\u4e3a\u9ad8\u8d1f\u8f7d\u8282\u70b9\uff081-100\uff09"
+      },
+      {
+        "key": "homeTrafficWarningThreshold",
+        "name": "\u6d41\u91cf\u9884\u8b66\u9608\u503c",
+        "type": "number",
+        "default": 80,
+        "help": "\u8282\u70b9\u6d41\u91cf\u914d\u989d\u4f7f\u7528\u7387\u8fbe\u5230\u8be5\u767e\u5206\u6bd4\u65f6\u5f52\u4e3a\u6d41\u91cf\u9884\u8b66\uff081-100\uff09"
+      },
+      {
+        "key": "homeExpiringDays",
+        "name": "\u5373\u5c06\u5230\u671f\u5929\u6570",
+        "type": "number",
+        "default": 30,
+        "help": "\u8282\u70b9\u5269\u4f59\u5929\u6570\u5c0f\u4e8e\u7b49\u4e8e\u8be5\u503c\u65f6\u5f52\u4e3a\u5373\u5c06\u5230\u671f\uff081-3650\uff09"
+      },
+      {
+        "key": "diskPredictionEnabled",
+        "name": "\u542f\u7528\u78c1\u76d8\u8017\u5c3d\u9884\u6d4b",
+        "type": "switch",
+        "default": false,
+        "help": "\u57fa\u4e8e\u8d1f\u8f7d\u5386\u53f2\u91cc\u7684\u78c1\u76d8\u7528\u91cf\u8d8b\u52bf\u9884\u6d4b\u8017\u5c3d\u65f6\u95f4\uff1b\u6837\u672c\u5c11\u4e8e 2 \u5929\u6216\u672a\u589e\u957f\u65f6\u4e0d\u663e\u793a"
+      },
+      {
+        "key": "diskPredictionThresholdDays",
+        "name": "\u78c1\u76d8\u9884\u6d4b\u9884\u8b66\u5929\u6570",
+        "type": "number",
+        "default": 30,
+        "help": "\u9884\u8ba1\u5269\u4f59\u5929\u6570\u5c0f\u4e8e\u7b49\u4e8e\u8be5\u503c\u65f6\u5728\u8282\u70b9\u5361\u7247\u548c\u8be6\u60c5\u8d1f\u8f7d\u56fe\u4e2d\u663e\u793a\u63d0\u793a\uff081-3650\uff09"
+      },
+      {
+        "name": "06 \u00b7 \u8282\u70b9\u8be6\u60c5\u6982\u89c8\u5361\u7247",
+        "type": "title"
+      },
+      {
+        "key": "nodeDetailSectionTabsEnabled",
+        "name": "\u8be6\u60c5\u9875\u5206\u533a\u6807\u7b7e\u9875",
+        "type": "switch",
+        "default": false,
+        "help": "\u9ed8\u8ba4\u5173\u95ed\uff0c\u4fdd\u6301\u8282\u70b9\u8be6\u60c5\u9875\u7eb5\u5411\u8fde\u7eed\u5c55\u793a\uff1b\u5f00\u542f\u540e\u6309\u6982\u89c8\u3001\u8d1f\u8f7d\u3001\u5ef6\u8fdf\u5206\u533a\u663e\u793a\u3002"
+      },
+      {
+        "key": "detailMetricCardPreset",
+        "name": "\u8be6\u60c5\u6982\u89c8\u5361\u7247\u65b9\u6848",
+        "type": "select",
+        "default": "\u8d22\u52a1",
+        "options": "\u8d22\u52a1,\u72b6\u6001,\u8d44\u6e90,\u7f51\u7edc,GPU,\u7efc\u5408,\u81ea\u5b9a\u4e49",
+        "help": "\u5bbd\u5c4f\u6bcf\u884c 4 \u5f20\uff0c\u4e2d\u5c4f 3 \u5f20\uff0c\u79fb\u52a8\u7aef 2 \u5f20\u3002\u8d22\u52a1/\u72b6\u6001/\u7f51\u7edc/GPU=8 \u5f20\uff1b\u8d44\u6e90=12 \u5f20\uff1b\u7efc\u5408=16 \u5f20\uff1b\u81ea\u5b9a\u4e49\u8bfb\u53d6\u4e0b\u65b9 keys\u3002"
+      },
+      {
+        "key": "detailMetricCardKeys",
+        "name": "\u81ea\u5b9a\u4e49\u8be6\u60c5\u5361\u7247 keys",
+        "type": "richtext",
+        "default": "nodePrice\nmonthlyCost\nremainingTime\nremainingValue\ntotalTraffic\ntrafficQuota\nuptime\nconnections",
+        "help": "\u9017\u53f7\u3001\u7a7a\u683c\u6216\u6362\u884c\u5206\u9694\u3002 nodePrice=\u8282\u70b9\u4ef7\u683c\uff1b monthlyCost=\u6708\u5747\u652f\u51fa\uff1b remainingTime=\u5269\u4f59\u65f6\u95f4\uff1b remainingValue=\u5269\u4f59\u4ef7\u503c\uff1b cpuUsage=CPU\u4f7f\u7528\u7387\uff1b gpuUsage=GPU\u4f7f\u7528\u7387\uff1b memoryUsage=\u5185\u5b58\u4f7f\u7528\u7387\uff1b swapUsage=\u4ea4\u6362\u5185\u5b58\u4f7f\u7528\u7387\uff1b diskUsage=\u786c\u76d8\u4f7f\u7528\u7387\uff1b load=\u7cfb\u7edf\u8d1f\u8f7d\uff1b temperature=\u7cfb\u7edf\u6e29\u5ea6\uff1b processes=\u8fdb\u7a0b\u6570\uff1b connections=\u8fde\u63a5\u6570\uff1b uptime=\u8fd0\u884c\u65f6\u95f4\uff1b uploadSpeed=\u5b9e\u65f6\u4e0a\u884c\uff1b downloadSpeed=\u5b9e\u65f6\u4e0b\u884c\uff1b totalTraffic=\u7d2f\u8ba1\u6d41\u91cf\uff1b trafficQuota=\u6d41\u91cf\u914d\u989d\u3002"
+      },
+      {
+        "name": "07 \u00b7 \u8282\u70b9\u8be6\u60c5\u56fe\u8868",
+        "type": "title"
+      },
+      {
+        "key": "gpuChartEnabled",
+        "name": "\u663e\u793a GPU \u6307\u6807\u56fe",
+        "type": "switch",
+        "default": false,
+        "help": "\u63a7\u5236 GPU \u5229\u7528\u7387\u3001\u8bbe\u5907\u3001\u663e\u5b58\u548c GPU \u6e29\u5ea6\u5e8f\u5217\uff1b\u65e0 GPU \u6570\u636e\u65f6\u81ea\u52a8\u9690\u85cf\u3002"
+      },
+      {
+        "key": "chartDashboardPreset",
+        "name": "\u8be6\u60c5\u8d1f\u8f7d\u56fe\u65b9\u6848",
+        "type": "select",
+        "default": "\u9ed8\u8ba4",
+        "options": "\u9ed8\u8ba4,\u7cbe\u7b80,\u8d44\u6e90,\u7f51\u7edc,GPU,\u5ef6\u8fdf,\u8fd0\u7ef4,\u5b8c\u6574,\u81ea\u5b9a\u4e49",
+        "help": "\u8d44\u6e90\u3001\u7f51\u7edc\u3001GPU\u3001\u5ef6\u8fdf\u548c\u8fd0\u7ef4\u6309\u6307\u6807\u65cf\u7ec4\u5408\uff1b\u5b8c\u6574\u8986\u76d6\u5b98\u65b9 25 \u4e2a\u6307\u6807\u3002\u81ea\u5b9a\u4e49\u8bfb\u53d6\u4e0b\u65b9 keys\u3002"
+      },
+      {
+        "key": "chartDashboardTemplate",
+        "name": "\u81ea\u5b9a\u4e49\u8be6\u60c5\u56fe\u8868 keys",
+        "type": "richtext",
+        "default": "cpu\nmemory\ndisk\nnetwork\ngpu\nconnections\nprocess",
+        "help": "\u9017\u53f7\u3001\u7a7a\u683c\u6216\u6362\u884c\u5206\u9694\u3002 cpu=CPU/\u8d1f\u8f7d\uff1b memory=RAM/Swap\u53ca\u603b\u91cf\uff1b disk=\u78c1\u76d8/\u603b\u91cf\uff1b network=\u5b9e\u65f6\u4e0a\u4e0b\u884c\uff1b traffic=\u7d2f\u8ba1\u4e0e\u5468\u671f\u6d41\u91cf\uff1b gpu=GPU/\u8bbe\u5907\u5229\u7528\u7387\uff1b gpuMemory=GPU\u663e\u5b58/\u603b\u91cf\uff1b temperature=\u7cfb\u7edf/GPU\u6e29\u5ea6\uff1b connections=TCP/UDP\uff1b process=\u8fdb\u7a0b\uff1b ping=Ping\u5ef6\u8fdf\uff1b pingLoss=Ping\u4e22\u5305\u3002\u65e7 JSON \u4ecd\u517c\u5bb9\u3002"
+      },
+      {
+        "name": "08 \u00b7 \u81ea\u5b9a\u4e49\u80cc\u666f",
+        "type": "title"
+      },
+      {
+        "key": "backgroundEnabled",
+        "name": "\u542f\u7528\u81ea\u5b9a\u4e49\u80cc\u666f",
+        "type": "switch",
+        "default": false,
+        "help": "\u542f\u7528\u540e\u53ef\u8bbe\u7f6e\u81ea\u5b9a\u4e49\u56fe\u7247\u6216\u89c6\u9891\u4f5c\u4e3a\u9875\u9762\u80cc\u666f"
+      },
+      {
+        "key": "backgroundType",
+        "name": "\u80cc\u666f\u7c7b\u578b",
+        "type": "select",
+        "default": "image",
+        "options": "image,video",
+        "help": "image=\u56fe\u7247\uff1b video=\u89c6\u9891\u3002"
+      },
+      {
+        "key": "lightBackgroundUrl",
+        "name": "\u4eae\u8272\u6a21\u5f0f\u80cc\u666f\u5730\u5740",
+        "type": "string",
+        "default": "",
+        "help": "\u652f\u6301 http(s) URL\u3001\u7ad9\u5185 / \u8def\u5f84\uff1b\u6301\u4e45\u672c\u5730\u6587\u4ef6\u653e\u5728 data/theme/user-assets/ \u540e\u586b\u5199 local:\u6587\u4ef6\u540d\u3002"
+      },
+      {
+        "key": "darkBackgroundUrl",
+        "name": "\u6697\u8272\u6a21\u5f0f\u80cc\u666f\u5730\u5740",
+        "type": "string",
+        "default": "",
+        "help": "\u652f\u6301 http(s) URL\u3001\u7ad9\u5185 / \u8def\u5f84\uff1b\u6301\u4e45\u672c\u5730\u6587\u4ef6\u653e\u5728 data/theme/user-assets/ \u540e\u586b\u5199 local:\u6587\u4ef6\u540d\u3002"
+      },
+      {
+        "key": "backgroundBlur",
+        "name": "\u80cc\u666f\u6a21\u7cca\u534a\u5f84",
+        "type": "number",
+        "default": 0,
+        "help": "\u80cc\u666f\u7684\u9ad8\u65af\u6a21\u7cca\u534a\u5f84\uff08\u5355\u4f4d\uff1apx\uff09\uff0c0 \u8868\u793a\u4e0d\u6a21\u7cca"
+      },
+      {
+        "key": "backgroundOverlay",
+        "name": "\u80cc\u666f\u906e\u7f69\u5f3a\u5ea6",
+        "type": "number",
+        "default": 0,
+        "help": "\u8303\u56f4 -100 \u5230 100\uff1b0 \u5173\u95ed\uff0c\u6b63\u6570\u52a0\u6df1\uff0c\u8d1f\u6570\u964d\u4f4e\u900f\u660e\u5ea6\u3002"
+      }
     ]
   }
 }
