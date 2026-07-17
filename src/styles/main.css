@@ -427,8 +427,20 @@ header {
   -webkit-backdrop-filter: blur(14px) saturate(145%) !important;
 }
 
+.bg-background\/50,
+.bg-background\/70 {
+  backdrop-filter: blur(14px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(145%) !important;
+}
+
 .dark .bg-background {
   background-color: var(--glass-dark-control, rgb(10 14 22 / 0.76)) !important;
+}
+
+.dark .bg-background\/50,
+.dark .bg-background\/70 {
+  backdrop-filter: blur(14px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(145%) !important;
 }
 
 /* ===== 小组件背景 ===== */
