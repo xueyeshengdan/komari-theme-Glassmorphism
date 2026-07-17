@@ -503,7 +503,7 @@ function hasRegion(region: string | null | undefined): boolean {
                     <span class="tabular-nums text-muted-foreground/70">{{ Math.round(task.avgLatency) }} ms</span>
                   </div>
                   <div
-                    class="grid h-1.5 flex-1 items-end gap-[1px]"
+                    class="grid h-1.5 items-end gap-[1px]"
                     :style="{ gridTemplateColumns: `repeat(${task.latencyBars.length}, minmax(0, 1fr))` }"
                   >
                     <span
@@ -527,7 +527,7 @@ function hasRegion(region: string | null | undefined): boolean {
                     <span class="tabular-nums text-muted-foreground/70">{{ task.avgLoss.toFixed(1) }}%</span>
                   </div>
                   <div
-                    class="grid h-1.5 flex-1 items-end gap-[1px]"
+                    class="grid h-1.5 items-end gap-[1px]"
                     :style="{ gridTemplateColumns: `repeat(${task.lossBars.length}, minmax(0, 1fr))` }"
                   >
                     <span
