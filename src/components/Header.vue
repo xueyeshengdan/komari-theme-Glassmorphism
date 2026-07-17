@@ -114,7 +114,7 @@ const sitename = computed(() => appStore.publicSettings?.sitename || 'Komari Mon
                 size="icon-sm"
                 :aria-label="button.title"
                 :aria-pressed="button.pressed"
-                :class="button.pressed && 'bg-background/70 text-selection'"
+                :class="button.pressed && 'bg-background text-selection'"
                 @click="handleButtonClick(button.action)"
               >
                 <Icon :icon="button.icon" :width="18" :height="18" />
