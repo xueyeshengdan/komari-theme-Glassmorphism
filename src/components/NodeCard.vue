@@ -494,54 +494,58 @@ function hasRegion(region: string | null | undefined): boolean {
                   <span class="text-muted-foreground tabular-nums">{{ task.avgLoss.toFixed(1) }}%</span>
                 </div>
               </div>
-              <!-- 延迟 + 丢包并排 -->
+              <!-- 延迟 + 丢包并排，点击弹出折线图 -->
               <div class="grid grid-cols-2 gap-1.5">
-                <!-- 延迟条 -->
-                <div class="flex flex-col gap-0.5 opacity-80 group-hover:opacity-100">
+                <!-- 延迟面板 -->
+                <div
+                  class="group/panel flex flex-col gap-0.5 rounded-lg bg-slate-500/5 p-1.5 opacity-80 hover:opacity-100 cursor-pointer"
+                  @click.stop="emit('pingClick')"
+                >
                   <div class="flex items-center justify-between text-[10px] leading-none">
-                    <span class="text-muted-foreground/50">延迟</span>
                     <span class="tabular-nums text-muted-foreground/70">{{ Math.round(task.avgLatency) }} ms</span>
                   </div>
                   <div
                     class="grid h-1.5 items-end gap-[1px]"
                     :style="{ gridTemplateColumns: `repeat(${task.latencyBars.length}, minmax(0, 1fr))` }"
                   >
-                    <span
+                    <DataTooltip
                       v-for="bar in task.latencyBars"
                       :key="bar.key"
-                      :title="bar.tooltip"
-                      :aria-label="bar.tooltip"
+                      placement="top"
+                      :content="bar.tooltip"
                       class="h-full w-full"
                     >
                       <span
-                        class="block h-full w-full rounded-[1px] transition-all group-hover:opacity-50 hover:scale-y-160 hover:opacity-100"
+                        class="block h-full w-full rounded-[1px] transition-transform duration-150 group-hover/panel:opacity-60 hover:scale-y-160 hover:!opacity-100"
                         :class="bar.className"
                       />
-                    </span>
+                    </DataTooltip>
                   </div>
                 </div>
-                <!-- 丢包条 -->
-                <div class="flex flex-col gap-0.5 opacity-80 group-hover:opacity-100">
+                <!-- 丢包面板 -->
+                <div
+                  class="group/panel flex flex-col gap-0.5 rounded-lg bg-slate-500/5 p-1.5 opacity-80 hover:opacity-100 cursor-pointer"
+                  @click.stop="emit('pingClick')"
+                >
                   <div class="flex items-center justify-between text-[10px] leading-none">
-                    <span class="text-muted-foreground/50">丢包</span>
                     <span class="tabular-nums text-muted-foreground/70">{{ task.avgLoss.toFixed(1) }}%</span>
                   </div>
                   <div
                     class="grid h-1.5 items-end gap-[1px]"
                     :style="{ gridTemplateColumns: `repeat(${task.lossBars.length}, minmax(0, 1fr))` }"
                   >
-                    <span
+                    <DataTooltip
                       v-for="bar in task.lossBars"
                       :key="bar.key"
-                      :title="bar.tooltip"
-                      :aria-label="bar.tooltip"
+                      placement="top"
+                      :content="bar.tooltip"
                       class="h-full w-full"
                     >
                       <span
-                        class="block h-full w-full rounded-[1px] transition-all group-hover:opacity-50 hover:scale-y-160 hover:opacity-100"
+                        class="block h-full w-full rounded-[1px] transition-transform duration-150 group-hover/panel:opacity-60 hover:scale-y-160 hover:!opacity-100"
                         :class="bar.className"
                       />
-                    </span>
+                    </DataTooltip>
                   </div>
                 </div>
               </div>
