@@ -1,4 +1,4 @@
-import type { Client, NodeStatus } from '@/utils/rpc'
+import type { Client, NodeStatus, NodeStatusPing } from '@/utils/rpc'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useAppStore } from '@/stores/app'
@@ -64,6 +64,8 @@ export interface NodeData {
   process: number
   connections: number
   connections_udp: number
+  /** 各 Ping 任务最新探测汇总（只含服务器视图中勾选的任务） */
+  ping?: Record<string, NodeStatusPing>
   uptime: number
   message?: string
   status_updated_at?: string
@@ -94,6 +96,7 @@ interface StatusData {
   process: number
   connections: number
   connections_udp: number
+  ping?: Record<string, NodeStatusPing>
   uptime: number
   message?: string
   updated_at?: string
@@ -218,6 +221,7 @@ const useNodesStore = defineStore('nodes', () => {
       process: 0,
       connections: 0,
       connections_udp: 0,
+      ping: undefined,
       uptime: 0,
     }
   }
@@ -277,6 +281,11 @@ const useNodesStore = defineStore('nodes', () => {
       node.message = status.message
     if (node.status_updated_at !== status.updated_at)
       node.status_updated_at = status.updated_at
+
+    // 同步 Ping 任务最新探测状态（来自服务器视图勾选），用于过滤已删除的延迟检测任务
+    const statusWithPing = status as unknown as NodeStatus
+    if (statusWithPing.ping !== node.ping)
+      node.ping = statusWithPing.ping
   }
 
   /**

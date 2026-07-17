@@ -6,6 +6,7 @@ import { PING_RECORD_MAX_COUNT } from '@/constants/load'
 import { abortPingRecords, loadPingRecords } from '@/services/history.service'
 import { loadPingMetricStats, queryMetrics } from '@/services/metrics.service'
 import { isPingMetric, normalizeMetricSeriesList, PING_LATENCY_METRIC, PING_LOSS_METRIC, pingTaskId, pingTaskName } from '@/utils/metricSeries'
+import { useNodesStore } from '@/stores/nodes'
 
 export interface NodePingHistoryPoint {
   time: string
@@ -122,6 +123,26 @@ function getIncludedTaskIds(records: PingRecord[]): Set<number> {
       .filter(([, summary]) => summary.total > 0)
       .map(([taskId]) => taskId),
   )
+}
+
+/**
+ * 从 nodes store 获取节点当前活跃的 Ping 任务 ID 集合。
+ * 对应 komari 后端「延迟检测 → 服务器视图」的勾选状态。
+ * 返回 null 表示没有限制（展示所有任务）。
+ */
+function getActivePingTaskIds(nodeUuid: string, nodesStore: ReturnType<typeof useNodesStore>): Set<number> | null {
+  const node = nodesStore.nodesByUuid.get(nodeUuid)
+  if (!node?.ping)
+    return null
+
+  const activeIds = new Set<number>()
+  for (const taskIdStr of Object.keys(node.ping)) {
+    const taskId = Number(taskIdStr)
+    if (Number.isFinite(taskId))
+      activeIds.add(taskId)
+  }
+
+  return activeIds.size > 0 ? activeIds : null
 }
 
 function getCacheKey(uuid: string, hours: number, maxCount?: number): string {
@@ -622,6 +643,7 @@ export function useNodePingStats(
     maxCount?: MaybeRefOrGetter<number | undefined>
   },
 ) {
+  const nodesStore = useNodesStore()
   const loading = ref(false)
   const error = ref<string | null>(null)
 
@@ -674,8 +696,16 @@ export function useNodePingStats(
       return readStatsCache(nodeUuid, hours, maxCount) ?? createEmptyStats()
 
     const records = state.recordsByClient.get(nodeUuid) ?? []
-    return records.length || state.metricStats?.length
-      ? buildStats(records, state.metricStats, state.metricLossPoints)
+
+    // 过滤出活跃任务（匹配后端「延迟检测 → 服务器视图」勾选状态）
+    const activeIds = getActivePingTaskIds(nodeUuid, nodesStore)
+    const filteredRecords = activeIds ? records.filter(r => activeIds.has(r.task_id)) : records
+    const filteredMetricStats = activeIds
+      ? state.metricStats?.filter(s => s.entity_id === nodeUuid && s.total > 0 && activeIds.has(normalizeTaskId(s.task_id)))
+      : state.metricStats
+
+    return filteredRecords.length || filteredMetricStats?.length
+      ? buildStats(filteredRecords, filteredMetricStats, state.metricLossPoints)
       : createEmptyStats()
   })
 
@@ -755,7 +785,10 @@ export function useNodePingStats(
       return new Map()
 
     const records = state.recordsByClient.get(nodeUuid) ?? []
-    const statsWithSamples = (state.metricStats ?? []).filter(s => s.entity_id === nodeUuid && s.total > 0)
+    const activeIds = getActivePingTaskIds(nodeUuid, nodesStore)
+    const statsWithSamples = (state.metricStats ?? [])
+      .filter(s => s.entity_id === nodeUuid && s.total > 0)
+      .filter(s => !activeIds || activeIds.has(normalizeTaskId(s.task_id)))
 
     if (statsWithSamples.length) {
       const result = new Map<number, NodePingStatsState>()
@@ -782,6 +815,8 @@ export function useNodePingStats(
     // Legacy path: per-task from records
     const taskMap = new Map<number, PingRecord[]>()
     for (const rec of records) {
+      if (activeIds && !activeIds.has(rec.task_id))
+        continue
       const list = taskMap.get(rec.task_id) ?? []
       list.push(rec)
       taskMap.set(rec.task_id, list)
@@ -816,8 +851,12 @@ export function useNodePingStats(
     if (!state)
       return []
 
+    const activeIds = getActivePingTaskIds(nodeUuid, nodesStore)
+
     // Metric path: use metricStats names
-    const nodeStats = (state.metricStats ?? []).filter(s => s.entity_id === nodeUuid && s.total > 0)
+    const nodeStats = (state.metricStats ?? [])
+      .filter(s => s.entity_id === nodeUuid && s.total > 0)
+      .filter(s => !activeIds || activeIds.has(normalizeTaskId(s.task_id)))
     if (nodeStats.length) {
       return nodeStats
         .map(s => ({
@@ -832,6 +871,8 @@ export function useNodePingStats(
     const seen = new Set<number>()
     const result: Array<{ taskId: number, name: string }> = []
     for (const rec of records) {
+      if (activeIds && !activeIds.has(rec.task_id))
+        continue
       if (!seen.has(rec.task_id)) {
         seen.add(rec.task_id)
         result.push({ taskId: rec.task_id, name: `Task ${rec.task_id}` })
