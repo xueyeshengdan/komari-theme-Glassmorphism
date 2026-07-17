@@ -494,46 +494,55 @@ function hasRegion(region: string | null | undefined): boolean {
                   <span class="text-muted-foreground tabular-nums">{{ task.avgLoss.toFixed(1) }}%</span>
                 </div>
               </div>
-              <!-- 延迟条 -->
-              <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100">
-                <span class="text-[9px] text-muted-foreground/50 w-4 shrink-0">L</span>
-                <div
-                  class="grid h-1.5 flex-1 items-end gap-[1px] transition-all hover:h-2.5"
-                  :style="{ gridTemplateColumns: `repeat(${task.latencyBars.length}, minmax(0, 1fr))` }"
-                >
-                  <span
-                    v-for="bar in task.latencyBars"
-                    :key="bar.key"
-                    :title="bar.tooltip"
-                    :aria-label="bar.tooltip"
-                    class="h-full w-full"
+              <!-- 延迟 + 丢包并排 -->
+              <div class="grid grid-cols-2 gap-1.5">
+                <!-- 延迟条 -->
+                <div class="flex flex-col gap-0.5 opacity-80 group-hover:opacity-100">
+                  <div class="flex items-center justify-between text-[10px] leading-none">
+                    <span class="text-muted-foreground/50">延迟</span>
+                    <span class="tabular-nums text-muted-foreground/70">{{ Math.round(task.avgLatency) }} ms</span>
+                  </div>
+                  <div
+                    class="grid h-1.5 flex-1 items-end gap-[1px]"
+                    :style="{ gridTemplateColumns: `repeat(${task.latencyBars.length}, minmax(0, 1fr))` }"
                   >
                     <span
-                      class="block h-full w-full rounded-[1px] transition-all group-hover:opacity-50 hover:scale-y-160 hover:opacity-100"
-                      :class="bar.className"
-                    />
-                  </span>
+                      v-for="bar in task.latencyBars"
+                      :key="bar.key"
+                      :title="bar.tooltip"
+                      :aria-label="bar.tooltip"
+                      class="h-full w-full"
+                    >
+                      <span
+                        class="block h-full w-full rounded-[1px] transition-all group-hover:opacity-50 hover:scale-y-160 hover:opacity-100"
+                        :class="bar.className"
+                      />
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <!-- 丢包条 -->
-              <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100">
-                <span class="text-[9px] text-muted-foreground/50 w-4 shrink-0">P</span>
-                <div
-                  class="grid h-1.5 flex-1 items-end gap-[1px] transition-all hover:h-2.5"
-                  :style="{ gridTemplateColumns: `repeat(${task.lossBars.length}, minmax(0, 1fr))` }"
-                >
-                  <span
-                    v-for="bar in task.lossBars"
-                    :key="bar.key"
-                    :title="bar.tooltip"
-                    :aria-label="bar.tooltip"
-                    class="h-full w-full"
+                <!-- 丢包条 -->
+                <div class="flex flex-col gap-0.5 opacity-80 group-hover:opacity-100">
+                  <div class="flex items-center justify-between text-[10px] leading-none">
+                    <span class="text-muted-foreground/50">丢包</span>
+                    <span class="tabular-nums text-muted-foreground/70">{{ task.avgLoss.toFixed(1) }}%</span>
+                  </div>
+                  <div
+                    class="grid h-1.5 flex-1 items-end gap-[1px]"
+                    :style="{ gridTemplateColumns: `repeat(${task.lossBars.length}, minmax(0, 1fr))` }"
                   >
                     <span
-                      class="block h-full w-full rounded-[1px] transition-all group-hover:opacity-50 hover:scale-y-160 hover:opacity-100"
-                      :class="bar.className"
-                    />
-                  </span>
+                      v-for="bar in task.lossBars"
+                      :key="bar.key"
+                      :title="bar.tooltip"
+                      :aria-label="bar.tooltip"
+                      class="h-full w-full"
+                    >
+                      <span
+                        class="block h-full w-full rounded-[1px] transition-all group-hover:opacity-50 hover:scale-y-160 hover:opacity-100"
+                        :class="bar.className"
+                      />
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
