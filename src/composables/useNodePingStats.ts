@@ -5,8 +5,8 @@ import { computed, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
 import { PING_RECORD_MAX_COUNT } from '@/constants/load'
 import { abortPingRecords, loadPingRecords } from '@/services/history.service'
 import { loadPingMetricStats, queryMetrics } from '@/services/metrics.service'
-import { isPingMetric, normalizeMetricSeriesList, PING_LATENCY_METRIC, PING_LOSS_METRIC, pingTaskId, pingTaskName } from '@/utils/metricSeries'
 import { useNodesStore } from '@/stores/nodes'
+import { isPingMetric, normalizeMetricSeriesList, PING_LATENCY_METRIC, PING_LOSS_METRIC, pingTaskId, pingTaskName } from '@/utils/metricSeries'
 
 export interface NodePingHistoryPoint {
   time: string
@@ -550,7 +550,7 @@ function getPercentile(values: number[], percentile: number): number | null {
 function buildStats(records: PingRecord[], metricStats?: PingMetricTaskStats[], metricLossPoints?: MetricLossPoint[]): NodePingStatsState {
   const statsWithSamples = (metricStats ?? []).filter(stat => stat.total > 0)
   if (statsWithSamples.length) {
-    const history = buildPingHistory(records.filter(record => record.value >= 0), metricLossPoints)
+    const history = buildPingHistory(records, metricLossPoints)
     const latencyValues = statsWithSamples
       .flatMap(stat => stat.valid > 0 && isFiniteNumber(stat.avg)
         ? [{ value: stat.avg, weight: stat.valid }]
@@ -799,7 +799,7 @@ export function useNodePingStats(
         if (!Number.isFinite(taskId))
           continue
 
-        const taskRecords = records.filter(r => r.task_id === taskId && r.value >= 0)
+        const taskRecords = records.filter(r => r.task_id === taskId)
         const taskLossPoints = state.metricLossPoints?.filter(lp => lp.task_id === taskId) ?? []
         const history = buildPingHistory(taskRecords, taskLossPoints.length ? taskLossPoints : undefined)
 
