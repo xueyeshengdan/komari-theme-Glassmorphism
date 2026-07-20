@@ -359,9 +359,11 @@ async function loadPingMetricRecords(nodeUuid: string, hours: number, maxCount?:
       .filter(stat => stat.total > 0 && !stat.loss_approximate && isFiniteNumber(stat.loss))
       .map(stat => normalizeTaskId(stat.task_id)),
   )
+  // 如果 stats（原始数据表）空但 rollup 查询有数据，仍然继续——不因 loss 完整性检查丢弃有效数据
+  const hasMetricDataFromRollup = metricRecords.length > 0 || metricLossPoints.length > 0
   const hasCompleteLossSeries = exactLossTaskIds.size > 0
     && [...exactLossTaskIds].every(taskId => metricLossTaskIds.has(taskId))
-  if (!hasCompleteLossSeries)
+  if (!hasCompleteLossSeries && !hasMetricDataFromRollup)
     return null
 
   return {
