@@ -142,6 +142,7 @@ export function fillMissingTimePoints<T extends { time?: string, updated_at?: st
       && Math.abs(currentData.timeMs - t) <= matchToleranceMs
     ) {
       found = currentData.item
+      dataIdx++
     }
 
     if (found) {

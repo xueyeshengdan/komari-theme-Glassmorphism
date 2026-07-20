@@ -712,22 +712,18 @@ const chartData = computed(() => {
   const minute = 60
   const hour = minute * 60
   let intervalSec: number
-  let maxGap: number
 
   if (hours <= 4) {
     intervalSec = minute
-    maxGap = minute * 2
   }
   else if (hours > 120) {
     intervalSec = hour
-    maxGap = hour * 2
   }
   else {
     intervalSec = minute * 15
-    maxGap = minute * 30
   }
 
-  return fillMissingTimePoints(data, intervalSec, hours * 3600, maxGap)
+  return fillMissingTimePoints(data, intervalSec, hours * 3600)
 })
 
 const latestStatus = computed(() => {

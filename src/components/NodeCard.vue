@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { CardX } from '@/components/ui/card-x'
 import { DataTooltip } from '@/components/ui/data-tooltip'
 import { ProgressThin } from '@/components/ui/progress-thin'
-import { useNodePingDisplay, getLatencyToneClass, getLossToneClass } from '@/composables/useNodePingDisplay'
+import { getLatencyToneClass, getLossToneClass, useNodePingDisplay } from '@/composables/useNodePingDisplay'
 import { useNodePingStats } from '@/composables/useNodePingStats'
 import { useAppStore } from '@/stores/app'
 import { formatBytesPerSecondWithConfig, formatBytesWithConfig, formatDateTime, getStatus, getUptimeDays } from '@/utils/helper'
@@ -623,8 +623,12 @@ function hasRegion(region: string | null | undefined): boolean {
               class="text-[11px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
               @click.stop="expandedPingTasks = !expandedPingTasks"
             >
-              <template v-if="expandedPingTasks">收起</template>
-              <template v-else>还有 {{ collapsedCount }} 条延迟线路 · 展开</template>
+              <template v-if="expandedPingTasks">
+                收起
+              </template>
+              <template v-else>
+                还有 {{ collapsedCount }} 条延迟线路 · 展开
+              </template>
             </button>
           </template>
         </div>
