@@ -109,7 +109,7 @@ export function fillMissingTimePoints<T extends { time?: string, updated_at?: st
   // 确定起始时间
   const start
     = totalSeconds !== null && totalSeconds > 0
-      ? end - totalSeconds * 1000 + interval // 固定长度模式
+      ? end - totalSeconds * 1000 // 固定长度模式
       : firstItem.timeMs // 可变长度模式
 
   // 生成理想的时间点
