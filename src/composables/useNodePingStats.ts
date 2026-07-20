@@ -469,7 +469,7 @@ function buildPingHistory(records: PingRecord[], metricLossPoints?: MetricLossPo
     sortedRecords.at(-1)?.timestamp ?? Number.NEGATIVE_INFINITY,
     sortedMetricLossPoints.at(-1)?.timestamp ?? Number.NEGATIVE_INFINITY,
   )
-  const bucketCount = Math.min(HISTORY_BUCKET_COUNT, Math.max(sortedRecords.length, sortedMetricLossPoints.length))
+  const bucketCount = HISTORY_BUCKET_COUNT
   const bucketSize = Math.max(1, (lastTime - firstTime) / bucketCount)
 
   const history: NodePingHistoryPoint[] = []
@@ -516,13 +516,34 @@ function buildPingHistory(records: PingRecord[], metricLossPoints?: MetricLossPo
       metricLossPointIndex += 1
     }
 
-    history.push({
+      history.push({
       time: new Date(startTime).toISOString(),
       latency: latencyCount ? latencySum / latencyCount : null,
       loss: metricLossPoints
         ? (metricLossCount ? metricLossSum / metricLossCount * 100 : null)
         : (totalCount ? lostCount / totalCount * 100 : null),
     })
+  }
+
+  // 前向填充：用最近的非空值填补中间的 null
+  let lastLatency: number | null = null
+  for (let i = 0; i < history.length; i++) {
+    if (history[i]!.latency !== null) {
+      lastLatency = history[i]!.latency
+    }
+    else if (lastLatency !== null) {
+      history[i]!.latency = lastLatency
+    }
+  }
+  // 后向填充：用最早的非空值填补开头的 null
+  let nextLatency: number | null = null
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i]!.latency !== null) {
+      nextLatency = history[i]!.latency
+    }
+    else if (nextLatency !== null) {
+      history[i]!.latency = nextLatency
+    }
   }
 
   return history
