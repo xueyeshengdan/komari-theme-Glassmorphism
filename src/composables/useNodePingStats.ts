@@ -60,7 +60,7 @@ interface SharedPingRecordsEntry {
 }
 
 const HISTORY_BUCKET_COUNT = 20
-const CACHE_VERSION = 8
+const CACHE_VERSION = 9
 const CACHE_KEY_PREFIX = 'komari-theme-emerald:node-ping-stats'
 const FULL_LOSS_EPSILON = 1e-6
 const PING_RECORD_REFRESH_INTERVAL_MS = 60_000
@@ -571,7 +571,7 @@ function getPercentile(values: number[], percentile: number): number | null {
 function buildStats(records: PingRecord[], metricStats?: PingMetricTaskStats[], metricLossPoints?: MetricLossPoint[]): NodePingStatsState {
   const statsWithSamples = (metricStats ?? []).filter(stat => stat.total > 0)
   if (statsWithSamples.length) {
-    const history = buildPingHistory(records, metricLossPoints)
+    const history = buildPingHistory(records.filter(r => r.value >= 0), metricLossPoints)
     const latencyValues = statsWithSamples
       .flatMap(stat => stat.valid > 0 && isFiniteNumber(stat.avg)
         ? [{ value: stat.avg, weight: stat.valid }]
@@ -603,7 +603,7 @@ function buildStats(records: PingRecord[], metricStats?: PingMetricTaskStats[], 
     return createEmptyStats()
 
   const filteredRecords = records.filter(record => includedTaskIds.has(record.task_id))
-  const history = buildPingHistory(filteredRecords)
+  const history = buildPingHistory(filteredRecords.filter(r => r.value >= 0))
   const taskRecords = new Map<number, PingRecord[]>()
 
   for (const record of filteredRecords) {
@@ -822,7 +822,7 @@ export function useNodePingStats(
 
         const taskRecords = records.filter(r => r.task_id === taskId)
         const taskLossPoints = state.metricLossPoints?.filter(lp => lp.task_id === taskId) ?? []
-        const history = buildPingHistory(taskRecords, taskLossPoints.length ? taskLossPoints : undefined)
+        const history = buildPingHistory(taskRecords.filter(r => r.value >= 0), taskLossPoints.length ? taskLossPoints : undefined)
 
         result.set(taskId, {
           avgLatency: isFiniteNumber(stat.avg) ? stat.avg : (taskRecords.length ? average(taskRecords.map(r => r.value)) : 0),
@@ -847,7 +847,7 @@ export function useNodePingStats(
 
     const result = new Map<number, NodePingStatsState>()
     for (const [taskId, taskRecords] of taskMap) {
-      const history = buildPingHistory(taskRecords)
+      const history = buildPingHistory(taskRecords.filter(r => r.value >= 0))
       const validValues = taskRecords.filter(r => r.value >= 0).map(r => r.value)
       const lostCount = taskRecords.filter(r => r.value < 0).length
       const loss = taskRecords.length ? (lostCount / taskRecords.length) * 100 : 0
