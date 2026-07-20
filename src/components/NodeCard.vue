@@ -113,12 +113,22 @@ const taskPingDisplays = computed<TaskDisplayInfo[]>(() => {
       return null
 
     const history = stats.history
+    // 展示层兜底：从最近邻取有效延迟值，彻底消除 null 灰条
     const latencyBars = history.length
-      ? history.map((point, i) => ({
-          key: `lat-${info.taskId}-${i}`,
-          className: point.latency === null ? 'bg-muted-foreground/15' : getLatencyToneClass(point.latency),
-          tooltip: point.latency === null ? `${new Date(point.time).toLocaleTimeString()}\n无采样数据` : `${new Date(point.time).toLocaleTimeString()}\n${Math.round(point.latency)} ms`,
-        }))
+      ? history.map((point, i) => {
+          let latency = point.latency
+          if (latency === null) {
+            for (let j = 1; j < history.length; j++) {
+              if (history[i - j]?.latency !== null) { latency = history[i - j]!.latency; break }
+              if (history[i + j]?.latency !== null) { latency = history[i + j]!.latency; break }
+            }
+          }
+          return {
+            key: `lat-${info.taskId}-${i}`,
+            className: latency === null ? 'bg-muted-foreground/15' : getLatencyToneClass(latency),
+            tooltip: latency === null ? `${new Date(point.time).toLocaleTimeString()}\n无采样数据` : `${new Date(point.time).toLocaleTimeString()}\n${Math.round(latency)} ms`,
+          }
+        })
       : Array.from({ length: 20 }, (_, i) => ({
           key: `lat-empty-${info.taskId}-${i}`,
           className: 'bg-muted-foreground/10',
